@@ -1,0 +1,58 @@
+{%  extends 'accounts/layout.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+		
+		<div class="row">
+			<div class="col-md">
+				<div class="card card-body">
+					<h5>Customers</h5>
+				</div>
+					<div class="row">
+						<div class="col">
+							<div class="card card-body">
+								<h1 class="display-4">Search: </h1>
+								<br>
+								<form method="get">
+									{{filter.form|crispy}}
+								<button class="btn btn-primary" type="submit">Search</button>
+							</form>
+							</div>
+						</div>
+						
+					</div>
+				<div class="card card-body">
+					<table class="table">
+						<tr>
+							<th>Customer Name</th>
+							<th>Number of Orders</th>
+							<th>Pending Orders</th>
+							<th>Out for delivery Orders</th>
+						</tr>
+						{%for customer in customers%}
+						<tr>
+							<td>{{customer.name}}</td>
+							<td>{{customer.order_set.all.count}}</td>
+							<td>
+							{%for order in customer.order_set.all%}
+								{%ifequal order.status "Pending" %}
+									{{order}},
+								{%endifequal %}
+							{%endfor%}
+							</td>
+							<td>
+								{%for order in customer.order_set.all%}
+									{%ifequal order.status "Out for delivery" %}
+										{{order}},
+									{%endifequal%}
+								{%endfor%}
+							</td>
+						</tr>
+						{%endfor%}
+					</table>
+				</div>
+			</div>
+			
+		</div>
+
+{% endblock content %}
